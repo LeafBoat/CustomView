@@ -44,10 +44,19 @@ public class RescissibleCheckGroup extends LinearLayout {
         super.setOnHierarchyChangeListener(mPassThroughListener);
     }
 
-    public void setCheckedId(int id) {
+    public void check(int id) {
         View view = findViewById(id);
         if (view instanceof CheckBox) {
             ((CheckBox) view).setChecked(true);
+        }
+    }
+
+    public void clearCheck() {
+        if (mCheckedId != -1) {
+            mOldCheckedId = mCheckedId;
+            CheckBox view = (CheckBox) findViewById(mCheckedId);
+            view.setChecked(false);
+            mCheckedId = -1;
         }
     }
 
@@ -84,7 +93,10 @@ public class RescissibleCheckGroup extends LinearLayout {
                 if (mOnCheckedChangeListener != null)
                     mOnCheckedChangeListener.onCheckedChanged(RescissibleCheckGroup.this, buttonView.getId());
             } else {
-                if (buttonView.getId() == mOldCheckedId) return;
+                if (buttonView.getId() == mOldCheckedId) {
+                    mOldCheckedId = -1;
+                    return;
+                }
                 mCheckedId = -1;
                 if (mOnCheckedChangeListener != null)
                     mOnCheckedChangeListener.onCheckedChanged(RescissibleCheckGroup.this, buttonView.getId());
